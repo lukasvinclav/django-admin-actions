@@ -1,0 +1,23 @@
+{% load i18n admin_urls %}
+
+{% block object-tools-items %}
+    {% if actions_list %}
+        {% for action in actions_list %}
+            <li>
+                <a href="{{ action.path }}{% if request.GET|length %}?{% for key, value in request.GET.items %}{{ key }}={{value}}{% if not forloop.last %}&{% endif %}{% endfor %}{% endif %}">
+                    {{ action.title }}
+                </a>
+            </li>
+        {% endfor %}
+    {% endif %}
+
+    {% if has_add_permission %}
+          <li>
+                {% url cl.opts|admin_urlname:'add' as add_url %}
+
+                <a href="{% add_preserved_filters add_url is_popup to_field %}" class="addlink">
+                    {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
+                </a>
+          </li>
+    {% endif %}
+{% endblock %}

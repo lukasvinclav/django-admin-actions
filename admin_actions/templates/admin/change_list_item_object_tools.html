@@ -1,0 +1,13 @@
+{% if actions_row %}
+    <div class="admin-actions-list-wrapper">
+        <ul class="admin-actions-list">
+            {% for action in actions_row %}
+                <li class="admin-action-list-item">
+                    <a href="{{ action.path }}">
+                        {{ action.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul><!-- /.admin-actions-list -->
+    </div><!-- /.admin-actions-list-wrapper -->
+{% endif %}

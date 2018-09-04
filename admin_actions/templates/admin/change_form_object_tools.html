@@ -1,0 +1,19 @@
+{% load i18n admin_urls %}
+
+{% if actions_list %}
+    {% for action in actions_list %}
+        <li>
+            <a href="{{ action.path }}">
+                {{ action.title }}
+            </a>
+        </li>
+    {% endfor %}
+{% endif %}
+
+{% block object-tools-items %}
+    <li>
+        {% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
+        <a href="{% add_preserved_filters history_url %}" class="historylink">{% trans "History" %}</a>
+    </li>
+    {% if has_absolute_url %}<li><a href="{{ absolute_url }}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif %}
+{% endblock %}
