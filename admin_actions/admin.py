@@ -33,9 +33,6 @@ class ActionsModelAdmin(ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
 
-        if not self.actions_list:
-            return urls
-
         action_row_urls = []
         for method_name in self.actions_row:
             method = getattr(self, method_name)
@@ -95,3 +92,10 @@ class ActionsModelAdmin(ModelAdmin):
         })
 
         return super(ActionsModelAdmin, self).changelist_view(request, extra_context)
+
+    class Media:
+        css = {
+            'all': (
+                'css/admin-actions.css',
+            )
+        }

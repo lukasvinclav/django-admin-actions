@@ -1,0 +1,32 @@
+.field-actions_holder  {
+    width: 1px;
+    white-space: nowrap;
+}
+
+.module .admin-actions-list {    
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.module .admin-actions-list li {    
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+}
+
+.module .admin-actions-list li:after {
+    background-color: #f6f6f6;
+    content: '';
+    display: block;
+    height: 16px;
+    margin: 0 16px;
+    width: 2px;
+}
+
+.module .admin-actions-list li:last-child:after {
+    display: none;
+}
