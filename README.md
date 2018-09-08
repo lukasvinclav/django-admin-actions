@@ -13,16 +13,16 @@ pip install git+https://git@github.com/lukasvinclav/django-admin-actions.git
 ## Sample admin configuration
 
 ```python
-from django.contrib import admin, messages
+from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
 from .models import ExampleModel
-from admin_actions.admin import ActionsAdmin
+from admin_actions.admin import ActionsModelAdmin
 
 
 @admin.register(ExampleModel)
-class CustomAdmin(ActionsAdmin):
+class CustomAdmin(ActionsModelAdmin):
     actions_list = ('custom_list_action', )
     actions_row = ('custom_row_action', )
     actions_detail = ('custom_detail_action', )
