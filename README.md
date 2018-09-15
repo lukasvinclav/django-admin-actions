@@ -6,9 +6,15 @@
 ![](https://img.shields.io/badge/Django-2.0+-green.svg?style=flat-square)
 ![](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)
 
+django-admin-actions provides simple way how to define custom actions for Django admin changelist, changeview and per row in changelist.
+
 ## Getting started
 
 1. Installation
+
+```bash
+pip install django-admin-actions
+```
 
 ```bash
 pip install git+https://git@github.com/lukasvinclav/django-admin-actions.git
