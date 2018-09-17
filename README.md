@@ -28,9 +28,11 @@ pip install git+https://git@github.com/lukasvinclav/django-admin-actions.git
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.utils.translations import ugettext_lazy as _
+
+from admin_actions.admin import ActionsModelAdmin
 
 from .models import ExampleModel
-from admin_actions.admin import ActionsModelAdmin
 
 
 @admin.register(ExampleModel)
