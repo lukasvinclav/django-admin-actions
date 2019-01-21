@@ -7,10 +7,12 @@ with open('README.md') as f:
 
 setup(
     name='django-admin-actions',
+    description='Display Django admin custom actions in change list, change form or per row in change list.',
     short_description='Display Django admin custom actions in change list, change form or per row in change list.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    version='0.1.0',
+    version='0.1.1',
+    url='http://github.com/lukasvinclav/django-admin-actions',
     packages=[
         'admin_actions',
     ],
