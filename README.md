@@ -20,7 +20,7 @@ pip install django-admin-actions
 pip install git+https://git@github.com/lukasvinclav/django-admin-actions.git
 ```
 
-2. Add **admin_admin_actions** into **INSTALLED_APPS** in your settings file before **django.contrib.admin**.
+2. Add **admin_actions** into **INSTALLED_APPS** in your settings file before **django.contrib.admin**.
 
 ## Sample admin configuration
 
