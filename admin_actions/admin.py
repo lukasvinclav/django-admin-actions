@@ -1,3 +1,5 @@
+from os.path import join
+
 from django.contrib.admin import ModelAdmin
 from django.template.loader import render_to_string
 from django.urls import path, reverse
@@ -44,13 +46,19 @@ class ActionsModelAdmin(ModelAdmin):
         for method_name in self.actions_row:
             method = getattr(self, method_name)
             action_row_urls.append(
-                path(getattr(method, 'url_path', method_name) + '/<path:pk>/', self.admin_site.admin_view(method), name=self.get_method_view_name(method_name)))
+                path(route=join(getattr(method, 'url_path', method_name), '<path:pk>'),
+                     view=self.admin_site.admin_view(method),
+                     name=self.get_method_view_name(method_name))
+            )
 
         action_detail_urls = []
         for method_name in self.actions_detail:
             method = getattr(self, method_name)
             action_detail_urls.append(
-                path(getattr(method, 'url_path', method_name) + '/<path:pk>/', self.admin_site.admin_view(method), name=self.get_method_view_name(method_name)))
+                path(route=join(getattr(method, 'url_path', method_name), '<path:pk>'),
+                     view=self.admin_site.admin_view(method),
+                     name=self.get_method_view_name(method_name))
+            )
 
         action_list_urls = []
         for method_name in self.actions_list:
