@@ -46,7 +46,7 @@ class ActionsModelAdmin(ModelAdmin):
         for method_name in self.actions_row:
             method = getattr(self, method_name)
             action_row_urls.append(
-                path(route=join(getattr(method, 'url_path', method_name), '<path:pk>'),
+                path(route=join('<path:pk>', getattr(method, 'url_path', method_name)),
                      view=self.admin_site.admin_view(method),
                      name=self.get_method_view_name(method_name))
             )
@@ -55,7 +55,7 @@ class ActionsModelAdmin(ModelAdmin):
         for method_name in self.actions_detail:
             method = getattr(self, method_name)
             action_detail_urls.append(
-                path(route=join(getattr(method, 'url_path', method_name), '<path:pk>'),
+                path(route=join('<path:pk>', getattr(method, 'url_path', method_name)),
                      view=self.admin_site.admin_view(method),
                      name=self.get_method_view_name(method_name))
             )
