@@ -75,7 +75,8 @@ class ActionsModelAdmin(ModelAdmin):
             method = getattr(self, method_name)
 
             action_list_urls.append(
-                path(getattr(method, 'url_path', method_name), self.admin_site.admin_view(method),
+                path(route=urljoin(getattr(method, 'url_path', method_name)),
+                     view=self.admin_site.admin_view(method),
                      name=self.get_method_view_name(method_name))
             )
 
