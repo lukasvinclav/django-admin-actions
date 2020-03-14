@@ -1,12 +1,30 @@
+from functools import reduce
+
 from django.contrib.admin import ModelAdmin
 from django.template.loader import render_to_string
 from django.urls import path, reverse
+
+
+def join_slash(a, b):
+    return a.rstrip('/') + '/' + b.lstrip('/')
+
+
+def urljoin(*args, append_slash=True):
+    joined = reduce(join_slash, args) if args else ''
+    return joined if not append_slash else joined + '/'
 
 
 class ActionsModelAdmin(ModelAdmin):
     actions_list = ()
     actions_row = ()
     actions_detail = ()
+
+    def get_admin_view_prefix(self):
+        opts = self.model._meta
+        return f'{opts.app_label}_{opts.model_name}'
+
+    def get_method_view_name(self, method_name):
+        return f'{self.get_admin_view_prefix()}_{method_name}'
 
     def actions_holder(self, instance):
         actions = []
@@ -16,18 +34,19 @@ class ActionsModelAdmin(ModelAdmin):
 
             actions.append({
                 'title': getattr(method, 'short_description', method_name),
-                'path': reverse('admin:' + method_name, args=(instance.pk, ))
+                'path': reverse('admin:' + self.get_method_view_name(method_name), args=(instance.pk,))
             })
 
         return render_to_string('admin/change_list_item_object_tools.html', context={
             'instance': instance,
             'actions_row': actions,
         })
+
     actions_holder.short_description = ''
 
     def get_list_display(self, request):
         if len(self.actions_row) > 0:
-            return super().get_list_display(request) + ('actions_holder', )
+            return super().get_list_display(request) + ('actions_holder',)
         return super().get_list_display(request)
 
     def get_urls(self):
@@ -37,20 +56,28 @@ class ActionsModelAdmin(ModelAdmin):
         for method_name in self.actions_row:
             method = getattr(self, method_name)
             action_row_urls.append(
-                path(getattr(method, 'url_path', method_name) + '/<path:pk>/', self.admin_site.admin_view(method), name=method_name))
+                path(route=urljoin('<path:pk>', getattr(method, 'url_path', method_name)),
+                     view=self.admin_site.admin_view(method),
+                     name=self.get_method_view_name(method_name))
+            )
 
         action_detail_urls = []
         for method_name in self.actions_detail:
             method = getattr(self, method_name)
             action_detail_urls.append(
-                path(getattr(method, 'url_path', method_name) + '/<path:pk>/', self.admin_site.admin_view(method), name=method_name))
+                path(route=urljoin('<path:pk>', getattr(method, 'url_path', method_name)),
+                     view=self.admin_site.admin_view(method),
+                     name=self.get_method_view_name(method_name))
+            )
 
         action_list_urls = []
         for method_name in self.actions_list:
             method = getattr(self, method_name)
 
             action_list_urls.append(
-                path(getattr(method, 'url_path', method_name), self.admin_site.admin_view(method), name=method_name)
+                path(route=urljoin(getattr(method, 'url_path', method_name)),
+                     view=self.admin_site.admin_view(method),
+                     name=self.get_method_view_name(method_name))
             )
 
         return action_list_urls + action_row_urls + action_detail_urls + urls
@@ -65,7 +92,7 @@ class ActionsModelAdmin(ModelAdmin):
 
             actions.append({
                 'title': getattr(method, 'short_description', method_name),
-                'path': reverse('admin:' + method_name, args=(object_id, ))
+                'path': reverse('admin:' + self.get_method_view_name(method_name), args=(object_id,))
             })
 
         extra_context.update({
@@ -84,7 +111,7 @@ class ActionsModelAdmin(ModelAdmin):
 
             actions.append({
                 'title': getattr(method, 'short_description', method_name),
-                'path': reverse('admin:' + method_name)
+                'path': reverse('admin:' + self.get_method_view_name(method_name))
             })
 
         extra_context.update({
