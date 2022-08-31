@@ -1,4 +1,5 @@
 from django.contrib.admin import ModelAdmin
+from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.urls import path, reverse
 
@@ -7,6 +8,15 @@ class ActionsModelAdmin(ModelAdmin):
     actions_list = ()
     actions_row = ()
     actions_detail = ()
+
+    def get_actions_list(self, request: HttpRequest):
+        return self.actions_list
+
+    def get_actions_row(self, request: HttpRequest):
+        return self.actions_row
+
+    def get_actions_detail(self, request: HttpRequest):
+        return self.actions_detail
 
     def actions_holder(self, instance):
         actions = []
@@ -26,7 +36,7 @@ class ActionsModelAdmin(ModelAdmin):
     actions_holder.short_description = ''
 
     def get_list_display(self, request):
-        if len(self.actions_row) > 0:
+        if len(self.get_actions_row(request=request)) > 0:
             return super().get_list_display(request) + ('actions_holder', )
         return super().get_list_display(request)
 
@@ -60,7 +70,7 @@ class ActionsModelAdmin(ModelAdmin):
             extra_context = {}
 
         actions = []
-        for method_name in self.actions_detail:
+        for method_name in self.get_actions_detail(request=request):
             method = getattr(self, method_name)
 
             actions.append({
@@ -79,7 +89,7 @@ class ActionsModelAdmin(ModelAdmin):
             extra_context = {}
 
         actions = []
-        for method_name in self.actions_list:
+        for method_name in self.get_actions_list(request=request):
             method = getattr(self, method_name)
 
             actions.append({
